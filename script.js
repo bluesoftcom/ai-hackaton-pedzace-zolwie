@@ -16,21 +16,24 @@ canvas.height = window.innerHeight;
 // Define the moving object
 let marioImg = new Image();
 marioImg.src = "mario.png";
-let marioSize = 50; // Set the desired size of the image
+let marioSize = 100; // Set the desired size of the image
 let marioX = canvas.width / 2 - marioSize / 2;
 let marioY = canvas.height - marioSize;
 let marioSpeed = 20;
 
 // Define the falling object
+let timeBetweenTurtles = 2; // 2 seconds between turtles
+let lastTurtleTime = 0;
+let turtles = [];
 let turtleImg = new Image();
 turtleImg.src = "turtle.png";
-let turtleSize = 50; // Set the desired size of the image
+let turtleSize = 100; // Set the desired size of the image
 let turtleX = Math.random() * (canvas.width - turtleSize);
 let turtleY = -turtleSize;
 let turtleSpeed = 5;
 
 // Handle key presses to move the object
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
   if (event.keyCode == 37 && marioX > 0) {
     marioX -= marioSpeed;
   } else if (event.keyCode == 39 && marioX < canvas.width - 50) {
@@ -38,25 +41,49 @@ document.addEventListener("keydown", function(event) {
   }
 });
 
-// Move the falling object and check for collision
-function update() {
-  turtleY += turtleSpeed;
-
-  if (turtleY > canvas.height) {
-    // Reset the turtle's position when it goes off the bottom of the canvas
-    turtleX = Math.random() * (canvas.width - turtleSize);
-    turtleY = -turtleSize;
+function createTurtle() {
+  // Check the time since the last turtle was created
+  let currentTime = new Date().getTime();
+  let timeSinceLastTurtle = (currentTime - lastTurtleTime) / 1000; // Convert to seconds
+  if (timeSinceLastTurtle < timeBetweenTurtles) {
+    return; // Don't create a new turtle yet
   }
 
-  // Check for collision
-  if (turtleX < marioX + marioSize &&
-      turtleX + turtleSize > marioX &&
-      turtleY < marioY + marioSize &&
-      turtleY + turtleSize > marioY) {
-    // Collision detected
-    score++;
-    turtleX = Math.random() * (canvas.width - turtleSize);
-    turtleY = -turtleSize;
+  // Create a new turtle
+  let turtle = {
+    x: Math.random() * (canvas.width - turtleSize),
+    y: -turtleSize,
+    speed: Math.random() * (10 - 2) + 2 // Set a random speed between 2 and 10
+  };
+  turtles.push(turtle);
+
+  // Update the time of the last turtle creation
+  lastTurtleTime = currentTime;
+}
+
+
+// Move the falling object and check for collision
+function update() {
+  // Move all turtles
+  for (let i = 0; i < turtles.length; i++) {
+    turtles[i].y += turtles[i].speed;
+
+    if (turtles[i].y > canvas.height) {
+      // Reset the turtle's position when it goes off the bottom of the canvas
+      turtles[i].x = Math.random() * (canvas.width - turtleSize);
+      turtles[i].y = -turtleSize;
+    }
+
+    // Check for collision
+    if (turtles[i].x < marioX + marioSize &&
+      turtles[i].x + turtleSize > marioX &&
+      turtles[i].y < marioY + marioSize &&
+      turtles[i].y + turtleSize > marioY) {
+      // Collision detected
+      score++;
+      turtles.splice(i, 1); // Remove the turtle from the array
+      i--;
+    }
   }
 
   // Decrement the timer every frame
@@ -83,13 +110,26 @@ function draw() {
 
   // Draw the objects
   ctx.drawImage(marioImg, marioX, marioY, marioSize, marioSize);
-  ctx.drawImage(turtleImg, turtleX, turtleY, turtleSize, turtleSize);
+
+  // Loop through the turtles array and draw each turtle
+  for (let i = 0; i < turtles.length; i++) {
+    ctx.drawImage(turtleImg, turtles[i].x, turtles[i].y, turtleSize, turtleSize);
+  }
 }
 
 // Run the game loop
+let timeSinceLastTurtle = 0;
 function loop() {
   update();
   draw();
+
+  // Create a new turtle after the specified time has elapsed
+  timeSinceLastTurtle += 1 / 60; // Increase the time by the frame time (1/60th of a second)
+  if (timeSinceLastTurtle > timeBetweenTurtles) {
+    createTurtle();
+    timeSinceLastTurtle = 0;
+  }
+
   requestAnimationFrame(loop);
 }
 
