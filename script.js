@@ -30,15 +30,15 @@ let marioImg = marioLeftImg;
 let marioSize = marioLeftImg.width / 3;
 let marioX = canvas.width / 2;
 let marioY = canvas.height - 140;
-let marioSpeed = 20;
+let marioSpeed = 30;
 
 // Define the falling object
 let timeBetweenTurtles = 2; // 2 seconds between turtles
 let lastTurtleTime = 0;
 let turtles = [];
 let turtleImg = new Image();
-turtleImg.src = "turtle.png";
-let turtleSize = 100; // Set the desired size of the image
+turtleImg.src = "coin.png";
+let turtleSize = 50; // Set the desired size of the image
 let turtleX = Math.random() * (canvas.width - turtleSize);
 let turtleY = -turtleSize;
 let turtleSpeed = 5;
