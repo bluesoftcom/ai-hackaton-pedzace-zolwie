@@ -20,6 +20,8 @@ let turtleX = Math.random() * (canvas.width - 50);
 let turtleY = -50;
 let turtleSpeed = 5;
 
+let score = 0;
+
 // Handle key presses to move the object
 document.addEventListener("keydown", function(event) {
   if (event.keyCode == 37 && marioX > 0) {
@@ -45,7 +47,9 @@ function update() {
       turtleY < marioY + 50 &&
       turtleY + 50 > marioY) {
     // Collision detected
-    alert("Game over!");
+    score++;
+    turtleX = Math.random() * (canvas.width - 50);
+    turtleY = -50;
   }
 }
 
