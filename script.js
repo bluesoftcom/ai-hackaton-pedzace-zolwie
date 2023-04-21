@@ -1,3 +1,9 @@
+var queryString = window.location.search;
+var urlParams = new URLSearchParams(queryString);
+
+var time = urlParams.get('time');
+var difficulty_level = urlParams.get('difficulty_level');
+
 // Define the canvas element
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
