@@ -2,10 +2,10 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let score = 0;
+let timer = 10; // Set the timer to 10 seconds
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-
 
 // Define the moving object
 let marioImg = new Image();
@@ -50,6 +50,15 @@ function update() {
     turtleX = Math.random() * (canvas.width - 50);
     turtleY = -50;
   }
+
+  // Decrement the timer every frame
+  if (timer > 0) {
+    timer -= 1 / 60; // Subtract 1/60th of a second (the frame rate) from the timer
+  } else {
+    // Game over when the timer reaches 0
+    alert("Game over! Your score is " + score);
+    document.location.reload();
+  }
 }
 
 // Draw the objects on the canvas
@@ -57,11 +66,12 @@ function draw() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw the score
+  // Draw the score and timer
   ctx.font = "24px Arial";
   ctx.fillStyle = "black";
   ctx.textAlign = "right";
   ctx.fillText("Score: " + score, canvas.width - 10, 30);
+  ctx.fillText("Time: " + timer.toFixed(1), canvas.width - 10, 60); // Add the timer to the scorecard
 
   // Draw the objects
   ctx.drawImage(marioImg, marioX, marioY, 50, 50);
