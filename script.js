@@ -1,6 +1,7 @@
 // Define the canvas element
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
+let score = 0;
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -45,7 +46,9 @@ function update() {
       turtleY < marioY + 50 &&
       turtleY + 50 > marioY) {
     // Collision detected
-    alert("Game over!");
+    score++;
+    turtleX = Math.random() * (canvas.width - 50);
+    turtleY = -50;
   }
 }
 
@@ -53,6 +56,12 @@ function update() {
 function draw() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw the score
+  ctx.font = "24px Arial";
+  ctx.fillStyle = "black";
+  ctx.textAlign = "right";
+  ctx.fillText("Score: " + score, canvas.width - 10, 30);
 
   // Draw the objects
   ctx.drawImage(marioImg, marioX, marioY, 50, 50);
