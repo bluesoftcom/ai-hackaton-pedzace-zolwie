@@ -13,11 +13,17 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 // Define the moving object
-let marioImg = new Image();
-marioImg.src = "mario.png";
-let marioSize = 100; // Set the desired size of the image
-let marioX = canvas.width / 2 - marioSize / 2;
-let marioY = canvas.height - marioSize;
+
+let marioLeftImg = new Image();
+marioLeftImg.src = "mario-left.png";
+
+let marioRightImg = new Image();
+marioRightImg.src = "mario-right.png";
+
+let marioImg = marioLeftImg;
+let marioSize = marioLeftImg.width / 3;
+let marioX = canvas.width / 2;
+let marioY = canvas.height - 120;
 let marioSpeed = 20;
 
 // Define the falling object
@@ -31,14 +37,43 @@ let turtleX = Math.random() * (canvas.width - turtleSize);
 let turtleY = -turtleSize;
 let turtleSpeed = 5;
 
+// Add variables for sprite animation
+let frameIndex = 0;
+let tickCount = 0;
+let isKeyPressed = false; 
+
 // Handle key presses to move the object
 document.addEventListener("keydown", function (event) {
   if (event.keyCode == 37 && marioX > 0) {
+    marioImg = marioLeftImg;
     marioX -= marioSpeed;
+    isKeyPressed = true; // Start the animation when a key is pressed
   } else if (event.keyCode == 39 && marioX < canvas.width - 50) {
+    marioImg = marioRightImg;
     marioX += marioSpeed;
+    isKeyPressed = true; // Start the animation when a key is pressed
   }
 });
+
+document.addEventListener("keyup", function(event) {
+  isKeyPressed = false; // Stop the animation when the key is released
+ // frameIndex = 0;
+});
+
+// Update the sprite animation
+function updateAnimation() {
+  if (isKeyPressed) { // Only update the animation if a key is pressed
+    tickCount++;
+
+    if (tickCount % 5 === 0) {
+      frameIndex++;
+
+      if (frameIndex > 2) {
+        frameIndex = 0;
+      }
+    }
+  }
+}
 
 function createTurtle() {
   // Check the time since the last turtle was created
@@ -63,6 +98,7 @@ function createTurtle() {
 
 // Move the falling object and check for collision
 function update() {
+  updateAnimation();
   // Move all turtles
   for (let i = 0; i < turtles.length; i++) {
     turtles[i].y += turtles[i].speed;
@@ -108,12 +144,13 @@ function draw() {
   ctx.fillText("Time: " + timer.toFixed(1), canvas.width - 10, 60); // Add the timer to the scorecard
 
   // Draw the objects
-  ctx.drawImage(marioImg, marioX, marioY, marioSize, marioSize);
+  ctx.drawImage(marioImg, frameIndex * marioImg.width / 3, 0, marioImg.width / 3, marioImg.height, marioX, marioY, marioImg.width / 3, marioImg.height);
 
-  // Loop through the turtles array and draw each turtle
-  for (let i = 0; i < turtles.length; i++) {
-    ctx.drawImage(turtleImg, turtles[i].x, turtles[i].y, turtleSize, turtleSize);
-  }
+ // Loop through the turtles array and draw each turtle
+   for (let i = 0; i < turtles.length; i++) {
+      ctx.drawImage(turtleImg, turtles[i].x, turtles[i].y, turtleSize, turtleSize);
+    }
+
 }
 
 // Run the game loop
@@ -134,3 +171,7 @@ function loop() {
 
 // Start the game loop
 loop();
+
+ 
+
+
