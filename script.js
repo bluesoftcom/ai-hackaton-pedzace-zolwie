@@ -8,7 +8,9 @@ let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let score = 0;
 let timer = urlParams.get('time');
-let audio = new Audio("mario-theme-song.mp3");
+let themeAudio = new Audio("mario-theme-song.mp3");
+let winAudio = new Audio("win.mp3");
+let failAudio = new Audio("fail.mp3");
 let backgroundImg = new Image();
 
 backgroundImg.src = "mario_background.jpg";
@@ -164,7 +166,13 @@ let timeSinceLastTurtle = 0;
 function loop() {
     // Check if the game is over
     if (timer <= 0) {
+      themeAudio.pause();
       // Game over
+      if(score > 0) {
+        winAudio.play();
+      } else {
+        failAudio.play();
+      }
       document.removeEventListener("keydown", keydownHandler);
       alert("Game over! Your score is " + score);
       window.location.href = "form.html";
@@ -183,7 +191,7 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
-audio.play();
+themeAudio.play();
 
 // Start the game loop
 loop();
