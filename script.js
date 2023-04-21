@@ -8,8 +8,9 @@ let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let score = 0;
 let timer = urlParams.get('time');
-
+let audio = new Audio("mario-theme-song.mp3");
 let backgroundImg = new Image();
+
 backgroundImg.src = "mario_background.jpg";
 
 canvas.width = window.innerWidth - 2;
@@ -181,6 +182,8 @@ function loop() {
 
   requestAnimationFrame(loop);
 }
+
+audio.play();
 
 // Start the game loop
 loop();
