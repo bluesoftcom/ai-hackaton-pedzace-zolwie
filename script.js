@@ -10,15 +10,17 @@ canvas.height = window.innerHeight;
 // Define the moving object
 let marioImg = new Image();
 marioImg.src = "mario.png";
-let marioX = canvas.width / 2;
-let marioY = canvas.height - 50;
+let marioSize = 50; // Set the desired size of the image
+let marioX = canvas.width / 2 - marioSize / 2;
+let marioY = canvas.height - marioSize;
 let marioSpeed = 20;
 
 // Define the falling object
 let turtleImg = new Image();
 turtleImg.src = "turtle.png";
-let turtleX = Math.random() * (canvas.width - 50);
-let turtleY = -50;
+let turtleSize = 50; // Set the desired size of the image
+let turtleX = Math.random() * (canvas.width - turtleSize);
+let turtleY = -turtleSize;
 let turtleSpeed = 5;
 
 // Handle key presses to move the object
@@ -36,19 +38,19 @@ function update() {
 
   if (turtleY > canvas.height) {
     // Reset the turtle's position when it goes off the bottom of the canvas
-    turtleX = Math.random() * (canvas.width - 50);
-    turtleY = -50;
+    turtleX = Math.random() * (canvas.width - turtleSize);
+    turtleY = -turtleSize;
   }
 
   // Check for collision
-  if (turtleX < marioX + 50 &&
-      turtleX + 50 > marioX &&
-      turtleY < marioY + 50 &&
-      turtleY + 50 > marioY) {
+  if (turtleX < marioX + marioSize &&
+      turtleX + turtleSize > marioX &&
+      turtleY < marioY + marioSize &&
+      turtleY + turtleSize > marioY) {
     // Collision detected
     score++;
-    turtleX = Math.random() * (canvas.width - 50);
-    turtleY = -50;
+    turtleX = Math.random() * (canvas.width - turtleSize);
+    turtleY = -turtleSize;
   }
 }
 
@@ -64,8 +66,8 @@ function draw() {
   ctx.fillText("Score: " + score, canvas.width - 10, 30);
 
   // Draw the objects
-  ctx.drawImage(marioImg, marioX, marioY, 50, 50);
-  ctx.drawImage(turtleImg, turtleX, turtleY, 50, 50);
+  ctx.drawImage(marioImg, marioX, marioY, marioSize, marioSize);
+  ctx.drawImage(turtleImg, turtleX, turtleY, turtleSize, turtleSize);
 }
 
 // Run the game loop
