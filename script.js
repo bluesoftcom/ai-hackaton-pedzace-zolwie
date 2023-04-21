@@ -9,8 +9,11 @@ let ctx = canvas.getContext("2d");
 let score = 0;
 let timer = urlParams.get('time');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let backgroundImg = new Image();
+backgroundImg.src = "mario_background.jpg";
+
+canvas.width = window.innerWidth - 2;
+canvas.height = window.innerHeight - 2;
 
 // Define the moving object
 
@@ -23,7 +26,7 @@ marioRightImg.src = "mario-right.png";
 let marioImg = marioLeftImg;
 let marioSize = marioLeftImg.width / 3;
 let marioX = canvas.width / 2;
-let marioY = canvas.height - 120;
+let marioY = canvas.height - 140;
 let marioSpeed = 20;
 
 // Define the falling object
@@ -42,8 +45,8 @@ let frameIndex = 0;
 let tickCount = 0;
 let isKeyPressed = false; 
 
-// Handle key presses to move the object
-document.addEventListener("keydown", function (event) {
+// Define the keydown event handler function
+function keydownHandler(event) {
   if (event.keyCode == 37 && marioX > 0) {
     marioImg = marioLeftImg;
     marioX -= marioSpeed;
@@ -53,7 +56,10 @@ document.addEventListener("keydown", function (event) {
     marioX += marioSpeed;
     isKeyPressed = true; // Start the animation when a key is pressed
   }
-});
+};
+
+// Add the keydown event listener
+document.addEventListener("keydown", keydownHandler);
 
 document.addEventListener("keyup", function(event) {
   isKeyPressed = false; // Stop the animation when the key is released
@@ -127,7 +133,7 @@ function update() {
   } else {
     // Game over when the timer reaches 0
     alert("Game over! Your score is " + score);
-    document.location.reload();
+    window.location.href = "form.html";
   }
 }
 
@@ -136,7 +142,7 @@ function draw() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Draw the score and timer
+  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height + 110);  // Draw the score and timer
   ctx.font = "24px Arial";
   ctx.fillStyle = "black";
   ctx.textAlign = "right";
@@ -150,12 +156,19 @@ function draw() {
    for (let i = 0; i < turtles.length; i++) {
       ctx.drawImage(turtleImg, turtles[i].x, turtles[i].y, turtleSize, turtleSize);
     }
-
 }
 
 // Run the game loop
 let timeSinceLastTurtle = 0;
 function loop() {
+    // Check if the game is over
+    if (timer <= 0) {
+      // Game over
+      document.removeEventListener("keydown", keydownHandler);
+      alert("Game over! Your score is " + score);
+      window.location.href = "form.html";
+      return;
+    }
   update();
   draw();
 
@@ -171,7 +184,3 @@ function loop() {
 
 // Start the game loop
 loop();
-
- 
-
-
