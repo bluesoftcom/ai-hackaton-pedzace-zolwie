@@ -33,7 +33,6 @@ let marioY = canvas.height - 140;
 let marioSpeed = 30;
 
 // Define the falling object
-let timeBetweenTurtles = 2; // 2 seconds between turtles
 let lastTurtleTime = 0;
 let turtles = [];
 let turtleImg = new Image();
@@ -41,12 +40,34 @@ turtleImg.src = "coin.png";
 let turtleSize = 50; // Set the desired size of the image
 let turtleX = Math.random() * (canvas.width - turtleSize);
 let turtleY = -turtleSize;
-let turtleSpeed = 5;
+
+// Define variables for time between turtles and turtle speed
+var timeBetweenTurtles = 3;
+var minSpeed = 1;
+var maxSpeed = 5;
+
+// Function to update timeBetweenTurtles and turtle speed based on form input
+function updateValues() {
+  var difficulty_level = urlParams.get("difficulty_level");
+  if (difficulty_level === "easy") {
+    timeBetweenTurtles = 3;
+    minSpeed = 1;
+    maxSpeed = 5;
+  } else if (difficulty_level === "medium") {
+    timeBetweenTurtles = 2;
+    minSpeed = 6;
+    maxSpeed = 10;
+  } else if (difficulty_level === "hard") {
+    timeBetweenTurtles = 1;
+    minSpeed = 11;
+    maxSpeed = 15;
+  }
+}
 
 // Add variables for sprite animation
 let frameIndex = 0;
 let tickCount = 0;
-let isKeyPressed = false; 
+let isKeyPressed = false;
 
 // Define the keydown event handler function
 function keydownHandler(event) {
@@ -64,9 +85,9 @@ function keydownHandler(event) {
 // Add the keydown event listener
 document.addEventListener("keydown", keydownHandler);
 
-document.addEventListener("keyup", function(event) {
+document.addEventListener("keyup", function (event) {
   isKeyPressed = false; // Stop the animation when the key is released
- // frameIndex = 0;
+  // frameIndex = 0;
 });
 
 // Update the sprite animation
@@ -96,7 +117,7 @@ function createTurtle() {
   let turtle = {
     x: Math.random() * (canvas.width - turtleSize),
     y: -turtleSize,
-    speed: Math.random() * (10 - 2) + 2 // Set a random speed between 2 and 10
+    speed: Math.random() * (maxSpeed - minSpeed) + minSpeed // Set a random speed between minSpeed and maxSpeed
   };
   turtles.push(turtle);
 
@@ -155,29 +176,29 @@ function draw() {
   // Draw the objects
   ctx.drawImage(marioImg, frameIndex * marioImg.width / 3, 0, marioImg.width / 3, marioImg.height, marioX, marioY, marioImg.width / 3, marioImg.height);
 
- // Loop through the turtles array and draw each turtle
-   for (let i = 0; i < turtles.length; i++) {
-      ctx.drawImage(turtleImg, turtles[i].x, turtles[i].y, turtleSize, turtleSize);
-    }
+  // Loop through the turtles array and draw each turtle
+  for (let i = 0; i < turtles.length; i++) {
+    ctx.drawImage(turtleImg, turtles[i].x, turtles[i].y, turtleSize, turtleSize);
+  }
 }
 
 // Run the game loop
 let timeSinceLastTurtle = 0;
 function loop() {
-    // Check if the game is over
-    if (timer <= 0) {
-      themeAudio.pause();
-      // Game over
-      if(score > 0) {
-        winAudio.play();
-      } else {
-        failAudio.play();
-      }
-      document.removeEventListener("keydown", keydownHandler);
-      alert("Game over! Your score is " + score);
-      window.location.href = "form.html";
-      return;
+  // Check if the game is over
+  if (timer <= 0) {
+    themeAudio.pause();
+    // Game over
+    if (score > 0) {
+      winAudio.play();
+    } else {
+      failAudio.play();
     }
+    document.removeEventListener("keydown", keydownHandler);
+    alert("Game over! Your score is " + score);
+    window.location.href = "form.html";
+    return;
+  }
   update();
   draw();
 
@@ -191,6 +212,7 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
+updateValues();
 themeAudio.play();
 
 // Start the game loop
