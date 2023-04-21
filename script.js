@@ -1,14 +1,13 @@
 var queryString = window.location.search;
 var urlParams = new URLSearchParams(queryString);
 
-var time = urlParams.get('time');
 var difficulty_level = urlParams.get('difficulty_level');
 
 // Define the canvas element
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let score = 0;
-let timer = 10; // Set the timer to 10 seconds
+let timer = urlParams.get('time');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
