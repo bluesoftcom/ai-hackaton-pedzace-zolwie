@@ -171,7 +171,8 @@ function draw() {
   ctx.fillStyle = "black";
   ctx.textAlign = "right";
   ctx.fillText("Score: " + score, canvas.width - 10, 30);
-  ctx.fillText("Time: " + timer.toFixed(1), canvas.width - 10, 60); // Add the timer to the scorecard
+  ctx.fillText("Level: " + difficulty_level, canvas.width - 10, 60); 
+  ctx.fillText("Time: " + timer.toFixed(1), canvas.width - 10, 90); // Add the timer to the scorecard
 
   // Draw the objects
   ctx.drawImage(marioImg, frameIndex * marioImg.width / 3, 0, marioImg.width / 3, marioImg.height, marioX, marioY, marioImg.width / 3, marioImg.height);
